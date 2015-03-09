@@ -10,5 +10,7 @@ void ProcessVector(std::vector<double> &vector)
 
 		std::transform(vector.begin(), vector.end(), vector.begin(),
 			[vectorMultiplier](double value){ return ((value < 0) ? value * vectorMultiplier : value); });
+
+		std::sort(vector.begin(), vector.end());
 	}
 }

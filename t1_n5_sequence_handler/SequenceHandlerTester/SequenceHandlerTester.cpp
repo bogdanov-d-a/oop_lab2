@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE(EmptyVectorProducesEmptyVector)
 
 BOOST_AUTO_TEST_CASE(VectorWithoutNegativesDoesntChangeContent)
 {
-	BOOST_CHECK(VectorDoesNotChange({ 4, 0, 3 }));
+	BOOST_CHECK(CheckVectorProcessing({ 4, 0, 3 }, { 0, 3, 4 }));
 }
 
 BOOST_AUTO_TEST_CASE(VectorWithOneNegativeElement)
@@ -33,5 +33,5 @@ BOOST_AUTO_TEST_CASE(VectorWithOneNegativeElement)
 
 BOOST_AUTO_TEST_CASE(VectorWithSeveralNegativeElements)
 {
-	BOOST_CHECK(CheckVectorProcessing({ -1, -1, 2, -3 }, { 6, 6, 2, 18 }));
+	BOOST_CHECK(CheckVectorProcessing({ -1, -1, 2, -3 }, { 2, 6, 6, 18 }));
 }
