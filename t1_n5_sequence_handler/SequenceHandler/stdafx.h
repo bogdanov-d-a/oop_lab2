@@ -13,3 +13,7 @@
 
 
 // TODO: reference additional headers your program requires here
+
+#include "VectorProcessorHeaders.h"
+#include <iostream>
+#include <iterator>
