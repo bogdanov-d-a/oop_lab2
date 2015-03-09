@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SequenceHandler", "SequenceHandler\SequenceHandler.vcxproj", "{31C4D594-A9DB-4A03-B022-AF1D62E4085F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SequenceHandlerTester", "SequenceHandlerTester\SequenceHandlerTester.vcxproj", "{1DCB6E74-38BE-4152-B1A3-2CB55C598CAE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{31C4D594-A9DB-4A03-B022-AF1D62E4085F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{31C4D594-A9DB-4A03-B022-AF1D62E4085F}.Debug|Win32.Build.0 = Debug|Win32
+		{31C4D594-A9DB-4A03-B022-AF1D62E4085F}.Release|Win32.ActiveCfg = Release|Win32
+		{31C4D594-A9DB-4A03-B022-AF1D62E4085F}.Release|Win32.Build.0 = Release|Win32
+		{1DCB6E74-38BE-4152-B1A3-2CB55C598CAE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1DCB6E74-38BE-4152-B1A3-2CB55C598CAE}.Debug|Win32.Build.0 = Debug|Win32
+		{1DCB6E74-38BE-4152-B1A3-2CB55C598CAE}.Release|Win32.ActiveCfg = Release|Win32
+		{1DCB6E74-38BE-4152-B1A3-2CB55C598CAE}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
