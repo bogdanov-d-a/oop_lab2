@@ -13,3 +13,7 @@
 
 
 // TODO: reference additional headers your program requires here
+
+#include "CWordStatHeader.h"
+#include <iostream>
+#include <algorithm>
