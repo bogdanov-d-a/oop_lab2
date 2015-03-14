@@ -13,3 +13,10 @@
 
 
 // TODO: reference additional headers your program requires here
+
+#define BOOST_TEST_MODULE ParseURLTester
+#define BOOST_TEST_INCLUDED
+#pragma warning (disable: 4702)
+#include <boost/test/unit_test.hpp>
+
+#include "../ParseURL/ParseURLUnitHeader.h"
