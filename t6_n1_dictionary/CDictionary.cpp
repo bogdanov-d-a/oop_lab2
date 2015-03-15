@@ -37,9 +37,11 @@ CDictionary::LoadFromFileResult CDictionary::LoadFromFile()
 	return LoadFromFileResult::SUCCESS;
 }
 
-void CDictionary::AddPair(std::string const& key, std::string const& value, bool fromFile)
+void CDictionary::AddPair(std::string key, std::string const& value, bool fromFile)
 {
 	assert(CheckKey(key));
+	ToLower(key);
+
 	m_dict[key] = { value, fromFile };
 	if (!fromFile)
 	{
@@ -76,10 +78,11 @@ bool CDictionary::ParseLine(std::string const& line, std::string &key, std::stri
 	return true;
 }
 
-bool CDictionary::FindValue(std::string const& key, std::string &value) const
+bool CDictionary::FindValue(std::string key, std::string &value) const
 {
 	assert(value.empty());
 	assert(CheckKey(key));
+	ToLower(key);
 
 	Dict::const_iterator findResult = m_dict.find(key);
 	if (findResult != m_dict.cend())
@@ -143,4 +146,9 @@ bool CDictionary::CheckKey(std::string const& key)
 bool CDictionary::HasUnsyncedChanges()
 {
 	return m_hasUnsyncedChanges;
+}
+
+void CDictionary::ToLower(std::string &str)
+{
+	std::transform(str.begin(), str.end(), str.begin(), tolower);
 }
