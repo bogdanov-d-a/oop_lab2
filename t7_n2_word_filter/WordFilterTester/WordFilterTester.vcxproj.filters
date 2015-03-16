@@ -24,12 +24,21 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\WordFilter\WordFilterUnit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WordFilter\WordFilterUnitHeader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WordFilterTester.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\WordFilter\WordFilterUnit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
