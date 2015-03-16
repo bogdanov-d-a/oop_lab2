@@ -8,7 +8,7 @@ void ReadStreamWordsToSet(std::istream &istream, WordFilter::StringSet &set)
 {
 	assert(set.empty());
 	WordFilter::SplitWords(istream, [](char c){},
-		[&set](std::string const& str){ set.insert(str); });
+		[&set](std::string const& str){ set.insert(WordFilter::ToLower(str)); });
 }
 
 int _tmain(int argc, _TCHAR* argv[])

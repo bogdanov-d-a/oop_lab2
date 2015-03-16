@@ -17,4 +17,6 @@ namespace WordFilter
 	void FilterText(std::istream &istream,
 		std::ostream &ostream, StringSet const& filterSet);
 	void FlushBuffer(std::string &buffer, SendStringFunction wordCallback);
+	void ToLower(std::string const& source, std::string &target);
+	std::string ToLower(std::string const& str);
 }

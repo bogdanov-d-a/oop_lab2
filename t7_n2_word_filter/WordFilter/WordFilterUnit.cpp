@@ -29,12 +29,11 @@ void WordFilter::FilterText(std::istream &istream,
 	SplitWords(istream, [&ostream](char c){ ostream << c; },
 		[&ostream, &filterSet](std::string const& str)
 	{
-		if (filterSet.find(str) == filterSet.cend())
+		if (filterSet.find(ToLower(str)) == filterSet.cend())
 		{
 			ostream << str;
 		}
-	}
-	);
+	});
 }
 
 void WordFilter::FlushBuffer(std::string &buffer, SendStringFunction wordCallback)
@@ -44,4 +43,18 @@ void WordFilter::FlushBuffer(std::string &buffer, SendStringFunction wordCallbac
 		wordCallback(buffer);
 		buffer.clear();
 	}
+}
+
+void WordFilter::ToLower(std::string const& source, std::string &target)
+{
+	assert(target.empty());
+	target.resize(source.length());
+	std::transform(source.begin(), source.end(), target.begin(), tolower);
+}
+
+std::string WordFilter::ToLower(std::string const& str)
+{
+	std::string result;
+	ToLower(str, result);
+	return result;
 }
