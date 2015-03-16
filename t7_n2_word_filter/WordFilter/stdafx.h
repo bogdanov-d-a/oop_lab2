@@ -13,3 +13,7 @@
 
 
 // TODO: reference additional headers your program requires here
+
+#include "WordFilterUnitHeader.h"
+#include <cassert>
+#include <fstream>
