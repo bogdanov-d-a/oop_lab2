@@ -5,8 +5,8 @@
 
 typedef struct
 {
-	size_t start;
-	size_t end;
+	size_t start;  // inclusive
+	size_t end;  // not inclusive
 }
 Range;
 
@@ -18,13 +18,13 @@ size_t GetRangeLength(Range const& range)
 
 typedef std::map<std::string, std::string> ReplaceDict;
 
-ReplaceDict::const_iterator TryFindKeySubstr(
+ReplaceDict::const_iterator FindLongestPrefixInMapKeys(
 	std::string const& src, Range const& srcRange, ReplaceDict const& map)
 {
-	for (size_t substrSize = GetRangeLength(srcRange); substrSize > 0; --substrSize)
+	for (size_t prefixLength = GetRangeLength(srcRange); prefixLength > 0; --prefixLength)
 	{
 		const ReplaceDict::const_iterator foundResult =
-			map.find(src.substr(srcRange.start, substrSize));
+			map.find(src.substr(srcRange.start, prefixLength));
 
 		if (foundResult != map.cend())
 		{
@@ -48,6 +48,11 @@ size_t FindMaxKeyLength(ReplaceDict const& map)
 	return maxKeyLengthIter->first.length();
 }
 
+size_t Min(size_t a, size_t b)
+{
+	return ((a <= b) ? a : b);
+}
+
 std::string ExpandTemplate(std::string const& tpl, ReplaceDict const& params)
 {
 	if (params.empty())
@@ -62,85 +67,92 @@ std::string ExpandTemplate(std::string const& tpl, ReplaceDict const& params)
 		return tpl;
 	}
 
-	Range buffer = {0, 0};
 	std::string resultStr;
+	Range buffer = { 0, 0 };
 
-	while (buffer.end != tpl.length())
+	while (buffer.end != tpl.length() || GetRangeLength(buffer) > 0)
 	{
-		if (GetRangeLength(buffer) < maxBufferLength)
+		buffer.end = Min(tpl.length(), buffer.start + maxBufferLength);
+		assert(GetRangeLength(buffer) > 0);
+		assert(GetRangeLength(buffer) <= maxBufferLength);
+
+		const ReplaceDict::const_iterator foundPrefixIter =
+			FindLongestPrefixInMapKeys(tpl, buffer, params);
+
+		if (foundPrefixIter != params.cend())
 		{
-			++buffer.end;
+			resultStr += foundPrefixIter->second;
+			buffer.start += foundPrefixIter->first.length();
 		}
 		else
 		{
-			assert(GetRangeLength(buffer) == maxBufferLength);
-
-			const ReplaceDict::const_iterator foundSubstrIter =
-				TryFindKeySubstr(tpl, buffer, params);
-
-			if (foundSubstrIter != params.cend())
-			{
-				resultStr += foundSubstrIter->second;
-				buffer.start += foundSubstrIter->first.length();
-			}
-			else
-			{
-				resultStr.push_back(tpl[buffer.start]);
-				++buffer.start;
-			}
+			resultStr.push_back(tpl[buffer.start]);
+			++buffer.start;
 		}
-	}
-
-	ReplaceDict::const_iterator lastFoundIter;
-
-	while (GetRangeLength(buffer) > 0 &&
-		(lastFoundIter = TryFindKeySubstr(tpl, buffer, params)) != params.cend())
-	{
-		resultStr += lastFoundIter->second;
-		buffer.start += lastFoundIter->first.length();
-	}
-
-	if (GetRangeLength(buffer) > 0)
-	{
-		resultStr += tpl.substr(buffer.start);
 	}
 
 	return resultStr;
 }
 
-void PrintUsage(const char programName[])
+bool ArgumentAmountIsCorrect(int argc)
 {
-	std::cout << "Usage: " << programName <<
-		"<input file> <output file> [<param> <value> [<param> <value> ...]]\n";
+	return (argc % 2 != 0 && argc >= 3);
+}
+
+void ForEachArgumentPair(int argc, _TCHAR* argv[],
+	std::function<void(const char a[], const char b[])> statement)
+{
+	assert(ArgumentAmountIsCorrect(argc));
+
+	int aIndex, bIndex;
+	for (aIndex = 3, bIndex = 4; bIndex < argc; aIndex += 2, bIndex += 2)
+	{
+		statement(argv[aIndex], argv[bIndex]);
+	}
+}
+
+bool NotifyAboutFileOpenError(std::ios const& stream, const char msg[])
+{
+	const bool fileOpenError = ((stream.rdstate() & std::ios::failbit) != 0);
+
+	if (fileOpenError)
+	{
+		std::cout << msg << "\n";
+	}
+
+	return fileOpenError;
 }
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	if (argc % 2 == 0 || argc < 3)
+	if (!ArgumentAmountIsCorrect(argc))
 	{
 		assert(argc > 0);
-		PrintUsage(argv[0]);
+		std::cout << "Usage: " << argv[0] <<
+			"<input file> <output file> [<param> <value> [<param> <value> ...]]\n";
 		return 1;
 	}
 
 	ReplaceDict dict;
+	ForEachArgumentPair(argc, argv,
+		[&dict](const char a[], const char b[]){ dict[a] = b; });
 
-	int srcArgInd, repArgInd;
-	for (srcArgInd = 3, repArgInd = 4; repArgInd < argc; srcArgInd += 2, repArgInd += 2)
+	std::ifstream inFile(static_cast<std::string>(argv[1]));
+	if (NotifyAboutFileOpenError(inFile, "Input file open error"))
 	{
-		dict[argv[srcArgInd]] = argv[repArgInd];
+		return 2;
 	}
 
-	std::string inFileName(argv[1]);
-	std::string outFileName(argv[2]);
-
-	std::ifstream inFileStream(inFileName);
-	std::ofstream outFileStream(outFileName);
+	std::ofstream outFile(static_cast<std::string>(argv[2]));
+	if (NotifyAboutFileOpenError(outFile, "Output file open error"))
+	{
+		return 3;
+	}
 
 	std::string curStr;
-	while (getline(inFileStream, curStr))
+	while (getline(inFile, curStr))
 	{
-		outFileStream << ExpandTemplate(curStr, dict);
+		outFile << ExpandTemplate(curStr, dict) << "\n";
 	}
 
 	return 0;
