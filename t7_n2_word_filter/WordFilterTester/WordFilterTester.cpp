@@ -4,12 +4,13 @@
 #include "stdafx.h"
 #include "../WordFilter/WordFilterUnit.h"
 
-std::string FilterString(std::string const& str,
-	WordFilter::StringSet const& filterSet)
+using namespace std;
+
+string FilterString(string const& str, StringSet const& filterSet)
 {
-	std::istringstream scrStream(str);
-	std::ostringstream targStream;
-	WordFilter::FilterText(scrStream, targStream, filterSet);
+	istringstream srcStream(str);
+	ostringstream targStream;
+	FilterStream(srcStream, targStream, filterSet);
 	return targStream.str();
 }
 
