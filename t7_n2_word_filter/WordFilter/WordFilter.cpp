@@ -4,11 +4,14 @@
 #include "stdafx.h"
 #include "WordFilterUnit.h"
 
-void ReadStreamWordsToSet(std::istream &istream, WordFilter::StringSet &set)
+using namespace std;
+
+StringSet ReadStreamWordsToSet(istream &input)
 {
-	assert(set.empty());
-	WordFilter::SplitWords(istream, [](char c){},
-		[&set](std::string const& str){ set.insert(WordFilter::ToLower(str)); });
+	StringSet result;
+	SplitWords(input, [](char c){},
+		[&result](string const& str){ result.insert(ToLower(str)); });
+	return result;
 }
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -16,20 +19,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	if (argc != 2)
 	{
 		assert(argc > 0);
-		std::cout << "Usage: " << argv[0] << " <blacklist file>\n";
+		cout << "Usage: " << argv[0] << " <blacklist file>\n";
 		return 1;
 	}
 
-	std::ifstream blacklistFileStream(argv[1]);
-	if ((blacklistFileStream.rdstate() & std::ifstream::failbit) != 0)
+	ifstream blacklistFileStream(argv[1]);
+	if ((blacklistFileStream.rdstate() & ifstream::failbit) != 0)
 	{
-		std::cout << "Blacklist file open error\n";
+		cout << "Blacklist file open error\n";
 		return 2;
 	}
 
-	WordFilter::StringSet filterSet;
-	ReadStreamWordsToSet(blacklistFileStream, filterSet);
-
-	WordFilter::FilterText(std::cin, std::cout, filterSet);
+	FilterStream(cin, cout, ReadStreamWordsToSet(blacklistFileStream));
 	return 0;
 }

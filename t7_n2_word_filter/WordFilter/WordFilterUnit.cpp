@@ -3,9 +3,6 @@
 
 using namespace std;
 
-typedef function<void(char)> SendCharFunction;
-typedef function<void(string const&)> SendStringFunction;
-
 const set<char> WHITESPACE_SET = {
 	' ', '\t', '\n', ':', ',', '-', '!', '.', '?', ';', '/', '\\',
 	'%', '^', '*', '+', '=', '(', ')', '[', ']', '{', '}', '<', '>'
